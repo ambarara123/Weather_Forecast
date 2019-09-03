@@ -8,6 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.iotdroid.forecast.R
+import com.iotdroid.forecast.data.WeatherApiService
+import kotlinx.android.synthetic.main.current_weather_fragment.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -15,7 +20,7 @@ class CurrentWeatherFragment : Fragment() {
         fun newInstance() = CurrentWeatherFragment()
     }
 
-    private lateinit var viewModel: CurrentWeatherViewModel
+    protected lateinit var viewModel: CurrentWeatherViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +33,21 @@ class CurrentWeatherFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
         // TODO: Use the ViewModel
+        val apiService = WeatherApiService()
+
+
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val currentWeatherResponse = apiService.getCurrentWeatherData("patna").await()
+            textView.text = currentWeatherResponse.current.toString()
+
+
+            val apiService = WeatherApiService()
+
+
+
+        }
     }
 
 }
