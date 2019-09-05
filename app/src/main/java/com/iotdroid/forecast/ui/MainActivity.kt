@@ -9,8 +9,16 @@ import androidx.navigation.ui.setupWithNavController
 import com.iotdroid.forecast.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
     private lateinit var navController : NavController
+
+    companion object{
+        var a = 0
+    }
+
+   // public static int a = 0
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +34,13 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp( navController,null)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+    }
+
+
 
 
 }
