@@ -12,12 +12,21 @@ import com.iotdroid.forecast.R
 import com.iotdroid.forecast.data.WeatherApiService
 import com.iotdroid.forecast.data.network.ConnectivityInterceptorImpl
 import com.iotdroid.forecast.data.network.WeatherNetworkDataSourceImpl
+import com.iotdroid.forecast.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class CurrentWeatherFragment : Fragment() {
+class CurrentWeatherFragment : ScopedFragment(),KodeinAware {
+
+    override val kodein by closestKodein()
+
+    private val viewModelFactory : CurrentWeatherViewModelFactory by instance()
 
     companion object {
         fun newInstance() = CurrentWeatherFragment()
@@ -34,23 +43,17 @@ class CurrentWeatherFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
+        viewModel = ViewModelProviders.of(this,viewModelFactory).get(CurrentWeatherViewModel::class.java)
         // TODO: Use the ViewModel
-        val apiService = WeatherApiService(ConnectivityInterceptorImpl(this.context!!))
 
-        val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(apiService)
+        bindUI()
 
-        weatherNetworkDataSource.downloadedCurrentWeather.observe(this, Observer {
-            textView.text = it.toString()
-        })
-
-
-
-        GlobalScope.launch(Dispatchers.Main) {
-            weatherNetworkDataSource.updateData("london","en")
-
-
-        }
     }
 
+    private fun bindUI() = launch {
+        val currentWeather = viewModel.weather.await()
+        currentWeather.observe(this@CurrentWeatherFragment, Observer {
+            textView.text = it.toString()
+        })
+    }
 }
