@@ -20,6 +20,4 @@ interface CurrentWeatherDao {
 
     @Update
     fun updateWeatherCurrent(current: Current)
-
-
 }

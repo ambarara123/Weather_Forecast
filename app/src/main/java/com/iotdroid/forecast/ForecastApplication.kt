@@ -9,7 +9,7 @@ import com.iotdroid.forecast.data.network.WeatherNetworkDataSource
 import com.iotdroid.forecast.data.network.WeatherNetworkDataSourceImpl
 import com.iotdroid.forecast.data.repository.ForecastRepository
 import com.iotdroid.forecast.data.repository.ForecastRepositoryImpl
-import com.iotdroid.forecast.ui.weather.current.CurrentWeatherViewModelprovider
+import com.iotdroid.forecast.ui.weather.current.CurrentWeatherViewModelFactory
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -31,7 +31,7 @@ class ForecastApplication : Application(),KodeinAware {
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
         bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(),instance()) }
 
-        bind() from provider { CurrentWeatherViewModelprovider(instance()) }
+        bind() from provider { CurrentWeatherViewModelFactory(instance()) }
 
     }
 
